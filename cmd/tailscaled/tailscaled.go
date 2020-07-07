@@ -68,6 +68,15 @@ func main() {
 	statepath := getopt.StringLong("state", 0, paths.DefaultTailscaledStateFile(), "Path of state file")
 	socketpath := getopt.StringLong("socket", 's', paths.DefaultTailscaledSocket(), "Path of the service unix socket")
 
+	getopt.Parse()
+	if !*subproc {
+		err := supervise(append(os.Args[1:], "--subproc"))
+		if err != nil {
+			log.Fatalf("supervise: %v", err)
+		}
+		return
+	}
+
 	logf := wgengine.RusagePrefixLog(log.Printf)
 	logf = logger.RateLimitedFn(logf, 5*time.Second, 5, 100)
 
@@ -76,7 +85,6 @@ func main() {
 		logf("fixConsoleOutput: %v", err)
 	}
 
-	getopt.Parse()
 	if len(getopt.Args()) > 0 {
 		log.Fatalf("too many non-flag arguments: %#v", getopt.Args()[0])
 	}

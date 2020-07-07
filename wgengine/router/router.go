@@ -7,6 +7,8 @@
 package router
 
 import (
+	"os"
+
 	"github.com/tailscale/wireguard-go/device"
 	"github.com/tailscale/wireguard-go/tun"
 	"inet.af/netaddr"
